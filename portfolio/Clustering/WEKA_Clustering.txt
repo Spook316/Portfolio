@@ -1,0 +1,157 @@
+WEKA Clustering
+
+Started with some general preprocessing.  Removed ID fields as they don't help with clusters.  Turned some numeric fields into nominal, (race, ethnicity, disposition, admit type, admit source, principle diagnosis code).  Started with k means clustering to look for any obvious clusters.  Chose 20 centroids hoping for the 20 disposition codes to emerge.  Allowed 500 iterations to get relatively accurate clusters.  Also chose euclidean distance as we want to cluster the most alike sets of attributes.  Lastly, ignored most diagnosis codes and a few other attributes that I did not consider important. I did find that when graphing clusters in the x and age in the y, we can find general trends in the patient disposition.  Certain clusters look to rarely result in code 20, while others seem to always result in code 20 no matter the age.  This may be good in a classifier so that you could look up their age and where they fit into a cluster and determine their chance of becoming another code 20.  If doctors know that a patient is in one of the clusters and is a particular age, then their chances of survival may be significantly lower. However, if they are not in one of the predominantly code 20 clusters, their chances of survival are high.  You can see this in the screen shot from weka.  It is a plot of clusters vs ages with the class colors being the different disposition codes.
+
+
+=== Run information ===
+
+Scheme:       weka.clusterers.SimpleKMeans -N 20 -A "weka.core.ManhattanDistance -R first-last" -I 500 -S 10
+Relation:     train-a-weka.filters.unsupervised.attribute.Remove-R1-2-weka.filters.unsupervised.attribute.NumericToNominal-R5-7,9,10,13
+Instances:    99999
+Attributes:   77
+              Record Count
+              Interval
+              Patient-Sex
+              Age
+              Patient-Race
+              Patient-Ethnicity
+              Patient-Disposition
+              Length of Stay
+              Admit-Type
+              Admit-Source
+              Hospital-ID
+              Region-ID
+              Principal-Dx-Code
+              Admit-Dx-Code
+              Serv-Class
+              Residence-Ind
+              Emergency-Dept-Ind
+              Pot Amb
+              Complication-Minor
+              Complication-Sever
+              Trauma-Minor
+              Trauma-Severe
+              Trauma-Severity
+              Nosocomial Inf
+              Severity
+Ignored:
+              Other-Dx-Code-1
+              Other-Dx-Code-2
+              Other-Dx-Code-3
+              Other-Dx-Code-4
+              Other-Dx-Code-5
+              Other-Dx-Code-6
+              Other-Dx-Code-7
+              Other-Dx-Code-8
+              Other-Dx-Code-9
+              Other-Dx-Code-10
+              Other-Dx-Code-11
+              Other-Dx-Code-12
+              Other-Dx-Code-13
+              Other-Dx-Code-14
+              Principal-PR-Code
+              Other-PR-Code-1
+              Other-PR-Code-2
+              Other-PR-Code-3
+              Other-PR-Code-4
+              Other-PR-Code-5
+              Other-PR-Code-6
+              Other-PR-Code-7
+              Other-PR-Code-8
+              Other-PR-Code-9
+              Other-PR-Code-10
+              Other-PR-Code-11
+              Other-PR-Code-12
+              Other-PR-Code-13
+              Other-PR-Code-14
+              Cause-E-Code
+              Place-E-Code
+              Reimb DRG
+              Reimb MDC
+              AccomCharges
+              AncilCharges
+              TotalCharges
+              CMC1
+              CMC2
+              CMC3
+              CMC4
+              CMC5
+              CMC6
+              CMC7
+              CMC8
+              CMC9
+              CMC10
+              PL1
+              PL2
+              PL3
+              PL4
+              PL5
+              Cost Weight
+Test mode:    evaluate on training data
+
+=== Model and evaluation on training set ===
+
+
+kMeans
+======
+
+Number of iterations: 15
+Sum of within cluster distances: 333877.82265918894
+Missing values globally replaced with mean/mode
+
+Cluster centroids:
+                                   Cluster#
+Attribute              Full Data          0          1          2          3          4          5          6          7          8          9         10         11         12         13         14         15         16         17         18         19
+                         (99999)     (5115)     (2521)     (4197)     (4860)     (4592)     (4944)     (1832)     (4701)     (5800)     (3647)     (6393)     (6151)     (5488)     (4081)     (3379)     (8268)     (6645)     (6144)     (3888)     (7353)
+============================================================================================================================================================================================================================================================
+Record Count                   2          2          3          2          2          2          2          2          3          3          3          3          3          3          2          2          2          2          3          3          2
+Interval                135.3515   135.3515       0.41   135.3515   135.3515   135.3515   135.3515   135.3515   135.3515   135.3515   135.3515     116.62     123.08      82.27   135.3515   135.3515   135.3515   135.3515     111.31     104.81   135.3515
+Patient-Sex                    F          F          M          F          F          F          M          M          M          F          F          F          F          M          F          F          M          F          M          M          M
+Age                           76         83         73         73         82         74         74         83         77         81         78         76         81         62         72         75         75         77         67         64         74
+Patient-Race                   1          1          1          1          1          1          1          1          1          1          1          2          1          2          1          1          1          1         88          2          1
+Patient-Ethnicity              2          2          2          2          2          2          2          2          2          2          2          2          2          2          2          2          2          2          1          2          2
+Patient-Disposition            1          3          6          1          3          1          1          3          6          6          6          3          3          1          1          6          1          1          1          1          1
+Length of Stay                 5          6          8          4          7          4          4          7          7          5          6          6         13          5          4          6          4          4          4          4          4
+Admit-Type                     1          1          2          3          1          1          1          1          1          1          1          1          1          1          3          3          1          1          1          1          1
+Admit-Source                   7          7          4          1          7          7          7          7          7          7          7          7          7          7          1          1          7          7          7          7          7
+Hospital-ID                  100        156         42        182         95        153        163        162        177         97        156         57        108         60         38        153         22        135         69         34        167
+Region-ID                      C          J          E          L          H          J          C          L          K          I          J          M          C          M          E          J          D          I          G          E          C
+Principal-Dx-Code           4280       4280       4280       4280      51881      49121      49121      82021        389       4280        486       4280        486       4280      41401      41401       4280       4280       4280       4280      41401
+Admit-Dx-Code               7802       4538      41041       5768      51881      49121      78609      78079       5789       5990       5789       5990       5770       5781       7847      41401       4589       5119      25002      78605       4538
+Serv-Class                     1          1          2          2          1          1          1          2          2          1          2          1          2          1          2          2          1          1          1          1          1
+Residence-Ind                  H          H          H          H          H          H          H          H          H          H          H          H          H          H          H          H          H          H          H          H          H
+Emergency-Dept-Ind             E          E          E          E          E          E          E          E          E          E          E          E          E          E          E          E          E          E          E          E          E
+Pot Amb                        0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0
+Complication-Minor             0          1          0          0          1          0          0          1          1          0          0          0          1          1          0          0          0          0          0          0          0
+Complication-Sever             0          0          0          0          0          0          0          0          0          0          0          0          1          0          0          0          0          0          0          0          0
+Trauma-Minor                   0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0
+Trauma-Severe                  0          0          0          0          0          0          0          1          0          0          0          0          0          0          0          0          0          0          0          0          0
+Trauma-Severity                0          0          0          0          0          0          0          2          0          0          0          0          0          0          0          0          0          0          0          0          0
+Nosocomial Inf                 0          0          0          0          0          0          0          0          0          0          0          0          1          0          0          0          0          0          0          0          0
+Severity                       4          4          4          3          5          3          3          5          5          3          4          4          6          4          4          5          3          3          3          3          4
+
+
+Clustered Instances
+
+ 0       5115 (  5%)
+ 1       2521 (  3%)
+ 2       4197 (  4%)
+ 3       4860 (  5%)
+ 4       4592 (  5%)
+ 5       4944 (  5%)
+ 6       1832 (  2%)
+ 7       4701 (  5%)
+ 8       5800 (  6%)
+ 9       3647 (  4%)
+10       6393 (  6%)
+11       6151 (  6%)
+12       5488 (  5%)
+13       4081 (  4%)
+14       3379 (  3%)
+15       8268 (  8%)
+16       6645 (  7%)
+17       6144 (  6%)
+18       3888 (  4%)
+19       7353 (  7%)
+
+
