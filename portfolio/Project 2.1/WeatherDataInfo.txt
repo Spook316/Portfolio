@@ -1,0 +1,106 @@
+Working with normalized .arff file.
+
+Attribute				Medians: 									Mode						Min				Max
+outlook - 			overcast									sunny/rainy			sunny			rainy
+temperature - 	mild											mild						hot				cool
+humidity - 			between high and normal		high/normal			high			normal
+windy - 				false											false						true			false
+play - 					yes												yes							yes				no
+
+Clustering:
+Due to few training records, the clustering was pretty unremarkable.  The best clustering that I can see occurs when looking at outlook vs humidity.  There only appear to be two mixed clusters that occur when determining whether one should play or not.  Even with mixed clusters, one of those clusters is predominantly (2 yes; 1 no) one result (yes).  This can be seen in figure 1.
+
+Classification:
+Trees:
+Ran J48 with 10 folds.  Dumb idea with few records.
+Confusion Matrix:
+ a b   <-- classified as
+ 5 4 | a = yes
+ 3 2 | b = no
+
+Ran with 3 folds... 14 / 3 might still be too many.
+Confusion Matrix:
+ a b   <-- classified as
+ 5 4 | a = yes
+ 1 4 | b = no
+
+Ran with 2 folds. This seems like it might be good.
+Confusion Matrix:
+ a b   <-- classified as
+ 7 2 | a = yes
+ 5 0 | b = no
+
+No folds.  Perfect classification tree might mean overfitting for training data.
+Confusion Matrix:
+ a b   <-- classified as
+ 9 0 | a = yes
+ 0 5 | b = no
+
+All result in same tree shown in figure 2.  This is a simple tree that works fine with all training data records.
+
+Rules:
+
+JRip: Grows rules by adding antecedents (every value of every attribute) until rule is completely accurate.  Prunes the rules, optimizes, and deletes rules that increase the desription length.  May result in how the tree worked.
+
+Resulting rules -
+(humidity = high) and (outlook = sunny) => play=no (3.0/0.0)
+(outlook = rainy) and (windy = TRUE) => play=no (2.0/0.0)
+ => play=yes (9.0/0.0)
+
+Find rules for the opposite case which is not hard to do.  Afterwards, use a default rule that says yes otherwise.
+
+
+Prism:  Finds a rule to explain part of training data.  Keeps creating new rules until all training data is covered.
+Based on the tree, I would expect outlook = overcast as the first rule.  At this point I'm not sure what would work best for classification.  If Prism evaluated rules before picking them, I would think it would continue to follow the tree and use outlook vs humidity and windy.
+
+Resulting rules - 
+If outlook = overcast then yes
+If humidity = normal
+   and windy = FALSE then yes
+If temperature = mild
+   and humidity = normal then yes
+If outlook = rainy
+   and windy = FALSE then yes
+If outlook = sunny
+   and humidity = high then no
+If outlook = rainy
+   and windy = TRUE then no
+
+I guess it just tried random rules without testing coverage of the rules.
+
+
+Ridor: Generates a default rule and then looks to find its exceptions with the least error rate.  Afterwards, looks to find exceptions to those exceptions and so on until results are pure.  I would think this would result in a rule saying play as the default.  After that, looking for the cases when not to play.  After that, it should be done.
+
+Rules generated :
+play = yes  (14.0/0.0)
+
+This definitely did not work the way I thought it would.  Why didn't it start with this and then recurse looking for the exceptions?
+
+
+NNge: Not sure how this one works.  I would guess it would look at clusters and determine rules based off of pure clusters.
+
+Rules generated :
+	class no IF : outlook in {rainy} ^ temperature in {mild,cool} ^ humidity in {high,normal} ^ windy in {TRUE}  (2)
+	class yes IF : outlook in {overcast,rainy} ^ temperature in {hot,mild,cool} ^ humidity in {high,normal} ^ windy in {FALSE}  (5)
+	class yes IF : outlook in {overcast} ^ temperature in {mild,cool} ^ humidity in {high,normal} ^ windy in {TRUE}  (2)
+	class yes IF : outlook in {sunny} ^ temperature in {mild,cool} ^ humidity in {normal} ^ windy in {TRUE,FALSE}  (2)
+	class no IF : outlook in {sunny} ^ temperature in {hot,mild} ^ humidity in {high} ^ windy in {TRUE,FALSE}  (3)
+
+Stat :
+	class yes : 3 exemplar(s) including 3 Hyperrectangle(s) and 0 Single(s).
+	class no : 2 exemplar(s) including 2 Hyperrectangle(s) and 0 Single(s).
+
+	Total : 5 exemplars(s) including 5 Hyperrectangle(s) and 0 Single(s).
+
+	Feature weights : [0.24674981977443894 0.029222565658954563 0.15183550136234153 0.04812703040826924]
+
+
+Looks like this looked at clusters over all attributes and generated rules based on those.
+
+
+1B1: Looks at nearest neighbor to determine values.  Results in no errors, but I wouldn't trust it as the nearest neighbor is usually the same.  I would want to use more neighbors.  Looking at the clusters from earlier, the cluster with 1 no and 2 yes' makes me think that 1Bk with k = 3 may have issues.  Especially with clusters (relatively close data points) with 2 data points where the 3rd may be part of another cluster.  This results in:
+ a b   <-- classified as
+ 9 0 | a = yes
+ 2 3 | b = no
+
+kStar: Uses entropy based distance functions.  Also results in no errors.
