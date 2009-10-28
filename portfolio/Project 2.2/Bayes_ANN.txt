@@ -1,0 +1,504 @@
+All classifiers run on training set with no cross-validation as the sample is too small for effective cross validation.
+
+AODE:	The averaged one dependence estimator is a baysian classifier that addresses the attribute independence problem found in Naive Bayes classifiers.  Can use incremental learning.  This means any new examples can continue to update the classifier.  Predicts class probabilities rather than predicting a single class.
+
+=== Run information ===
+
+Scheme:       weka.classifiers.bayes.AODE -F 1
+Relation:     weather.symbolic
+Instances:    14
+Attributes:   5
+              outlook
+              temperature
+              humidity
+              windy
+              play
+Test mode:    evaluate on training data
+
+=== Classifier model (full training set) ===
+
+The AODE Classifier
+Class yes: Prior probability = 0.63
+
+
+Class no: Prior probability = 0.38
+
+Dataset: weather.symbolic
+Instances: 14
+Attributes: 5
+Frequency limit for superParents: 1
+Correction: laplace
+
+
+Time taken to build model: 0.02 seconds
+
+=== Evaluation on training set ===
+=== Summary ===
+
+Correctly Classified Instances          14              100      %
+Incorrectly Classified Instances         0                0      %
+Kappa statistic                          1     
+Mean absolute error                      0.2452
+Root mean squared error                  0.2637
+Relative absolute error                 52.8028 %
+Root relative squared error             54.9933 %
+Total Number of Instances               14     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 1         0          1         1         1          1        yes
+                 1         0          1         1         1          1        no
+Weighted Avg.    1         0          1         1         1          1    
+
+=== Confusion Matrix ===
+
+ a b   <-- classified as
+ 9 0 | a = yes
+ 0 5 | b = no
+
+
+BayesNet: Uses a bayesian network on the probabilities of the attributes to determine the classes.
+
+=== Run information ===
+
+Scheme:       weka.classifiers.bayes.BayesNet -D -Q weka.classifiers.bayes.net.search.local.K2 -- -P 1 -S BAYES -E weka.classifiers.bayes.net.estimate.SimpleEstimator -- -A 0.5
+Relation:     weather.symbolic
+Instances:    14
+Attributes:   5
+              outlook
+              temperature
+              humidity
+              windy
+              play
+Test mode:    evaluate on training data
+
+=== Classifier model (full training set) ===
+
+Bayes Network Classifier
+not using ADTree
+#attributes=5 #classindex=4
+Network structure (nodes followed by parents)
+outlook(3): play 
+temperature(3): play 
+humidity(2): play 
+windy(2): play 
+play(2): 
+LogScore Bayes: -69.07317135664013
+LogScore BDeu: -83.46880542273105
+LogScore MDL: -82.71568504897063
+LogScore ENTROPY: -65.56181240647145
+LogScore AIC: -78.56181240647145
+
+
+Time taken to build model: 0 seconds
+
+=== Evaluation on training set ===
+=== Summary ===
+
+Correctly Classified Instances          13               92.8571 %
+Incorrectly Classified Instances         1                7.1429 %
+Kappa statistic                          0.8372
+Mean absolute error                      0.2615
+Root mean squared error                  0.3242
+Relative absolute error                 56.3272 %
+Root relative squared error             67.6228 %
+Total Number of Instances               14     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 1         0.2        0.9       1         0.947      0.933    yes
+                 0.8       0          1         0.8       0.889      0.933    no
+Weighted Avg.    0.929     0.129      0.936     0.929     0.926      0.933
+
+=== Confusion Matrix ===
+
+ a b   <-- classified as
+ 9 0 | a = yes
+ 1 4 | b = no
+
+NaiveBayesSimple: The basic bayes network implementation.  As it is a naive implementation, attribute independence problems are not addressed and classifications may not be as good as with the AODE classifier.
+
+=== Run information ===
+
+Scheme:       weka.classifiers.bayes.NaiveBayesSimple 
+Relation:     weather.symbolic
+Instances:    14
+Attributes:   5
+              outlook
+              temperature
+              humidity
+              windy
+              play
+Test mode:    evaluate on training data
+
+=== Classifier model (full training set) ===
+
+Naive Bayes (simple)
+
+Class yes: P(C) = 0.625     
+
+Attribute outlook
+sunny	overcast	rainy	
+0.25      	0.41666667	0.33333333	
+
+Attribute temperature
+hot	mild	cool	
+0.25      	0.41666667	0.33333333	
+
+Attribute humidity
+high	normal	
+0.36363636	0.63636364	
+
+Attribute windy
+TRUE	FALSE	
+0.36363636	0.63636364	
+
+
+
+Class no: P(C) = 0.375     
+
+Attribute outlook
+sunny	overcast	rainy	
+0.5       	0.125     	0.375     	
+
+Attribute temperature
+hot	mild	cool	
+0.375     	0.375     	0.25      	
+
+Attribute humidity
+high	normal	
+0.71428571	0.28571429	
+
+Attribute windy
+TRUE	FALSE	
+0.57142857	0.42857143	
+
+
+
+Time taken to build model: 0 seconds
+
+=== Evaluation on training set ===
+=== Summary ===
+
+Correctly Classified Instances          13               92.8571 %
+Incorrectly Classified Instances         1                7.1429 %
+Kappa statistic                          0.8372
+Mean absolute error                      0.2917
+Root mean squared error                  0.3392
+Relative absolute error                 62.8233 %
+Root relative squared error             70.7422 %
+Total Number of Instances               14     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 1         0.2        0.9       1         0.947      0.911    yes
+                 0.8       0          1         0.8       0.889      0.922    no
+Weighted Avg.    0.929     0.129      0.936     0.929     0.926      0.915
+
+=== Confusion Matrix ===
+
+ a b   <-- classified as
+ 9 0 | a = yes
+ 1 4 | b = no
+
+Multilayer Perceptron:  This is the basic neural network implementation.
+
+=== Run information ===
+
+Scheme:       weka.classifiers.functions.MultilayerPerceptron -L 0.3 -M 0.2 -N 500 -V 0 -S 0 -E 20 -H a
+Relation:     weather.symbolic
+Instances:    14
+Attributes:   5
+              outlook
+              temperature
+              humidity
+              windy
+              play
+Test mode:    evaluate on training data
+
+=== Classifier model (full training set) ===
+
+Sigmoid Node 0
+    Inputs    Weights
+    Threshold    -4.597967080790813
+    Node 2    2.433270074007239
+    Node 3    2.0546443732203774
+    Node 4    1.364159803860347
+    Node 5    2.6974766889493536
+    Node 6    3.908322709064356
+Sigmoid Node 1
+    Inputs    Weights
+    Threshold    4.601251960011152
+    Node 2    -2.4045226373071156
+    Node 3    -2.0532744956144127
+    Node 4    -1.379986429753948
+    Node 5    -2.756274547604192
+    Node 6    -3.877948258791871
+Sigmoid Node 2
+    Inputs    Weights
+    Threshold    -0.1550798021501342
+    Attrib outlook=sunny    -1.323464477913686
+    Attrib outlook=overcast    1.6602675280399888
+    Attrib outlook=rainy    -0.3207802552865604
+    Attrib temperature=hot    -0.2873122456981835
+    Attrib temperature=mild    1.181190360097958
+    Attrib temperature=cool    -0.7853150475848826
+    Attrib humidity    2.808930687905
+    Attrib windy    1.9190213581350706
+Sigmoid Node 3
+    Inputs    Weights
+    Threshold    -0.18031675012278034
+    Attrib outlook=sunny    -1.1524514010228344
+    Attrib outlook=overcast    1.5760227701429683
+    Attrib outlook=rainy    -0.32578400279223824
+    Attrib temperature=hot    -0.2760307631136823
+    Attrib temperature=mild    1.0450876279343007
+    Attrib temperature=cool    -0.6318819517738498
+    Attrib humidity    2.4504774603875408
+    Attrib windy    1.678251292646871
+Sigmoid Node 4
+    Inputs    Weights
+    Threshold    -0.3554146745674961
+    Attrib outlook=sunny    -0.46574052680925143
+    Attrib outlook=overcast    1.4382073898080827
+    Attrib outlook=rainy    -0.6194183985830608
+    Attrib temperature=hot    -0.0670794406887232
+    Attrib temperature=mild    0.6337484752708613
+    Attrib temperature=cool    -0.20814280117719502
+    Attrib humidity    1.982466584793048
+    Attrib windy    0.9946423645131915
+Sigmoid Node 5
+    Inputs    Weights
+    Threshold    -0.06888405078498452
+    Attrib outlook=sunny    -1.3982064219096493
+    Attrib outlook=overcast    1.8084944112736516
+    Attrib outlook=rainy    -0.31997269602762973
+    Attrib temperature=hot    -0.3035821635771427
+    Attrib temperature=mild    1.2908528760310662
+    Attrib temperature=cool    -0.8921466424329777
+    Attrib humidity    3.1090049574873424
+    Attrib windy    2.0747113212966872
+Sigmoid Node 6
+    Inputs    Weights
+    Threshold    0.04399369934901554
+    Attrib outlook=sunny    -1.80182134279014
+    Attrib outlook=overcast    2.2544547024444554
+    Attrib outlook=rainy    -0.40095717506501327
+    Attrib temperature=hot    -0.41558677311306397
+    Attrib temperature=mild    1.589170285947685
+    Attrib temperature=cool    -1.2545441906677217
+    Attrib humidity    4.119310666164331
+    Attrib windy    2.740851006387263
+Class yes
+    Input
+    Node 0
+Class no
+    Input
+    Node 1
+
+
+Time taken to build model: 0.66 seconds
+
+=== Evaluation on training set ===
+=== Summary ===
+
+Correctly Classified Instances          14              100      %
+Incorrectly Classified Instances         0                0      %
+Kappa statistic                          1     
+Mean absolute error                      0.0245
+Root mean squared error                  0.0354
+Relative absolute error                  5.2713 %
+Root relative squared error              7.3845 %
+Total Number of Instances               14     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 1         0          1         1         1          1        yes
+                 1         0          1         1         1          1        no
+Weighted Avg.    1         0          1         1         1          1    
+
+=== Confusion Matrix ===
+
+ a b   <-- classified as
+ 9 0 | a = yes
+ 0 5 | b = no
+
+It seems that primary criteria for play to occur is overcast weather, mild temperature, as well as humidity and wind.
+
+Voted Perceptron: A many times quicker neural network that takes advantage of the kernel trick to make its calculations.
+
+=== Run information ===
+
+Scheme:       weka.classifiers.functions.VotedPerceptron -I 1 -E 1.0 -S 1 -M 10000
+Relation:     weather.symbolic
+Instances:    14
+Attributes:   5
+              outlook
+              temperature
+              humidity
+              windy
+              play
+Test mode:    evaluate on training data
+
+=== Classifier model (full training set) ===
+
+VotedPerceptron: Number of perceptrons=4
+
+Time taken to build model: 0.01 seconds
+
+=== Evaluation on training set ===
+=== Summary ===
+
+Correctly Classified Instances          10               71.4286 %
+Incorrectly Classified Instances         4               28.5714 %
+Kappa statistic                          0.2432
+Mean absolute error                      0.28  
+Root mean squared error                  0.4896
+Relative absolute error                 60.3033 %
+Root relative squared error            102.1157 %
+Total Number of Instances               14     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 1         0.8        0.692     1         0.818      0.778    yes
+                 0.2       0          1         0.2       0.333      0.778    no
+Weighted Avg.    0.714     0.514      0.802     0.714     0.645      0.778
+
+=== Confusion Matrix ===
+
+ a b   <-- classified as
+ 9 0 | a = yes
+ 4 1 | b = no
+
+Unfortunately, this just didn't seem to predict well enough.  I would have thought any neural network would come to the right decisions, so I am amazed at the amount of misclassifications that occur.
+
+Winnow: Algorithm that promotes and demotes attribute values based on errors that occur because of those values.  I'm going to run unbalanced and if it does not give the greatest results, I will try balanced.
+
+Unbalanced:
+=== Run information ===
+
+Scheme:       weka.classifiers.functions.Winnow -I 20 -A 2.0 -B 0.5 -H -1.0 -W 2.0 -S 1
+Relation:     weather.symbolic
+Instances:    14
+Attributes:   5
+              outlook
+              temperature
+              humidity
+              windy
+              play
+Test mode:    evaluate on training data
+
+=== Classifier model (full training set) ===
+
+Winnow
+
+Attribute weights
+
+w0 8.0
+w1 1.9073486328125E-6
+w2 4.0
+w3 4.0
+w4 1.52587890625E-5
+w5 1.0
+w6 9.5367431640625E-7
+w7 1.8189894035458565E-12
+
+Cumulated mistake count: 143
+
+
+
+Time taken to build model: 0.01 seconds
+
+=== Evaluation on training set ===
+=== Summary ===
+
+Correctly Classified Instances          10               71.4286 %
+Incorrectly Classified Instances         4               28.5714 %
+Kappa statistic                          0.3778
+Mean absolute error                      0.2857
+Root mean squared error                  0.5345
+Relative absolute error                 61.5385 %
+Root relative squared error            111.4773 %
+Total Number of Instances               14     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.778     0.4        0.778     0.778     0.778      0.689    yes
+                 0.6       0.222      0.6       0.6       0.6        0.689    no
+Weighted Avg.    0.714     0.337      0.714     0.714     0.714      0.689
+
+=== Confusion Matrix ===
+
+ a b   <-- classified as
+ 7 2 | a = yes
+ 2 3 | b = no
+
+This could get better. I will try balanced.
+
+Balanced:
+=== Run information ===
+
+Scheme:       weka.classifiers.functions.Winnow -L -I 20 -A 2.0 -B 0.5 -H -1.0 -W 2.0 -S 1
+Relation:     weather.symbolic
+Instances:    14
+Attributes:   5
+              outlook
+              temperature
+              humidity
+              windy
+              play
+Test mode:    evaluate on training data
+
+=== Classifier model (full training set) ===
+
+Winnow
+
+Attribute weights
+
+w0 p 64.0 n 0.0625 d 63.9375
+w1 p 0.125 n 32.0 d -31.875
+w2 p 16.0 n 0.25 d 15.75
+w3 p 16.0 n 0.25 d 15.75
+w4 p 0.25 n 16.0 d -15.75
+w5 p 32.0 n 0.125 d 31.875
+w6 p 0.03125 n 128.0 d -127.96875
+w7 p 0.125 n 32.0 d -31.875
+
+Cumulated mistake count: 76
+
+
+
+Time taken to build model: 0.01 seconds
+
+=== Evaluation on training set ===
+=== Summary ===
+
+Correctly Classified Instances          12               85.7143 %
+Incorrectly Classified Instances         2               14.2857 %
+Kappa statistic                          0.6585
+Mean absolute error                      0.1429
+Root mean squared error                  0.378 
+Relative absolute error                 30.7692 %
+Root relative squared error             78.8263 %
+Total Number of Instances               14     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 1         0.4        0.818     1         0.9        0.8      yes
+                 0.6       0          1         0.6       0.75       0.8      no
+Weighted Avg.    0.857     0.257      0.883     0.857     0.846      0.8  
+
+=== Confusion Matrix ===
+
+ a b   <-- classified as
+ 9 0 | a = yes
+ 2 3 | b = no
+
+These results seem a little bit better than the unbalanced, but I think I would rather go with a basic neural net.
